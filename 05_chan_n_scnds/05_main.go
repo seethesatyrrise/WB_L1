@@ -1,45 +1,40 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"os"
-	"sync"
 	"time"
 )
 
 func main() {
 	ch := make(chan int)
-	tCh := make(chan struct{})
-	wg := sync.WaitGroup{}
+
 	var n int64
 	fmt.Fscanln(os.Stdin, &n)
 
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
-		defer close(ch)
-		val := 0
-		for {
-			select {
-			case <-tCh:
-				return
-			default:
-				ch <- val
-				fmt.Println("send value ", val)
-				val++
-				time.Sleep(time.Millisecond * 100)
-			}
-		}
-	}()
+	ctx, cancel := context.WithCancel(context.Background())
 
-	go func() {
-		for val := range ch {
-			fmt.Println("get value ", val)
-		}
-	}()
+	go receive(ctx, ch)
+	go send(ctx, ch)
 
 	time.Sleep(time.Second * time.Duration(n))
-	tCh <- struct{}{}
-	wg.Wait()
+	cancel()
+	close(ch)
+}
 
+func send(ctx context.Context, ch chan int) {
+	val := 0
+	for {
+		ch <- val
+		fmt.Println("send ", val)
+		val++
+		time.Sleep(time.Millisecond * 100)
+	}
+}
+
+func receive(ctx context.Context, ch chan int) {
+	for val := range ch {
+		fmt.Println("get ", val)
+	}
 }
