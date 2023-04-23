@@ -8,5 +8,8 @@ func main() {
 }
 
 func deleteElement(in []int, i int) []int {
+	if i < 0 || i > len(in)-1 {
+		return in
+	}
 	return append(in[:i], in[i+1:]...)
 }

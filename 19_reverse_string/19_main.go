@@ -8,9 +8,12 @@ func main() {
 }
 
 func reverseString(str string) string {
+	if len(str) == 0 {
+		return ""
+	}
 	strRunes := []rune(str)
 	strLen := len(strRunes) - 1
-	for i := 0; i < strLen/2; i++ {
+	for i := 0; i <= strLen/2; i++ {
 		strRunes[i], strRunes[strLen-i] = strRunes[strLen-i], strRunes[i]
 	}
 	return string(strRunes)

@@ -12,10 +12,12 @@ func main() {
 func intersection(a1, a2 []int) []int {
 	m := make(map[int]struct{})
 	res := []int{}
+	// заполняем мапу, в которой ключи - значения из первого массива
 	for _, val := range a1 {
 		m[val] = struct{}{}
 	}
 
+	// проверяем, существуют ли в мапе ключи, равные значениям из второго массива
 	for _, val := range a2 {
 		_, ok := m[val]
 		if ok {

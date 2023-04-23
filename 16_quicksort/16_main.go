@@ -14,13 +14,18 @@ func quickSortStart(arr []int) []int {
 func quickSort(arr []int, low, high int) []int {
 	if low < high {
 		var p int
+		// перераспределение относительно элемента high
 		arr, p = partition(arr, low, high)
+		// сортировка левого и правого подмассивов
 		arr = quickSort(arr, low, p-1)
 		arr = quickSort(arr, p+1, high)
 	}
 	return arr
 }
 
+// перераспределение элементов в массиве таким образом,
+// что элементы, меньшие опорного, помещаются перед ним,
+// а большие или равные - после
 func partition(arr []int, low, high int) ([]int, int) {
 	pivot := arr[high]
 	i := low
