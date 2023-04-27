@@ -20,7 +20,7 @@ func main() {
 	quit := make(chan struct{})
 	defer close(quit)
 
-	runWorkers(n, ch, quit)
+	runWorkers(n, ch)
 
 	val := 0
 	for {
@@ -29,33 +29,21 @@ func main() {
 		select {
 		// отлов сигнала о прерывании
 		case <-signalChan:
-			//quit <- struct{}{}
 			return
 		default:
-			//if ch == nil {
-			//	break
-			//}
+
 			ch <- val
 		}
 	}
 }
 
 // запуск N воркеров
-func runWorkers(n int, ch chan int, quit chan struct{}) {
+func runWorkers(n int, ch chan int) {
 	for i := 0; i < n; i++ {
 		go func(i int) {
 			for val := range ch {
 				fmt.Printf("goroutine #%d\tval: %d\n", i, val)
 			}
-
-			//for {
-			//	select {
-			//	case val := <-ch:
-			//		fmt.Printf("goroutine #%d\tval: %d\n", i, val)
-			//	case <-quit:
-			//		return
-			//	}
-			//}
 		}(i)
 	}
 }

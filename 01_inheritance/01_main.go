@@ -7,8 +7,8 @@ type Human struct {
 	age  int
 }
 
-// тип Setter наследует тип Human
-type Setter struct {
+// тип Action наследует тип Human
+type Action struct {
 	Human
 }
 
@@ -23,7 +23,7 @@ func (h *Human) SetAge(age int) {
 }
 
 func main() {
-	a := &Setter{}
+	a := &Action{}
 	a.SetName("Hazel")
 	a.SetAge(2)
 	fmt.Println(a)

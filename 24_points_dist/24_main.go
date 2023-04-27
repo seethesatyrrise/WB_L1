@@ -6,9 +6,14 @@ import (
 )
 
 func main() {
-	p1 := &point{x: 0, y: 4}
-	p2 := &point{x: 3, y: 0}
+	p1 := newPoint(0, 4) //&point{x: 0, y: 4}
+	p2 := newPoint(3, 0) //&point{x: 3, y: 0}
+
 	fmt.Println(p1.distanceTo(p2))
+}
+
+func newPoint(x, y int) *point {
+	return &point{x: x, y: y}
 }
 
 type point struct {

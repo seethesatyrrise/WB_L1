@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	ch := make(chan int)
+	ch := make(chan int, 5)
 
 	// количество секунд работы пересылки
 	var n int64

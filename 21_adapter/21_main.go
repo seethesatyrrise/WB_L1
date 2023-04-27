@@ -2,57 +2,71 @@ package main
 
 import "fmt"
 
+// Паттерн Адаптер (Adapter) предназначен для преобразования интерфейса
+// одного класса в интерфейс другого. Благодаря реализации данного паттерна
+// мы можем использовать вместе классы с несовместимыми интерфейсами.
+//
+// Когда надо использовать Адаптер?
+// - Когда необходимо использовать имеющийся класс, но его интерфейс не соответствует потребностям
+// - Когда надо использовать уже существующий класс совместно с другими классами, интерфейсы которых не совместимы
+//
+// В моем примере есть человек и животные: собака и кот. Человек умеет взаимодействовать
+// с животными (гладить их). Собаку можно гладить. Но кота можно гладить только с опаской.
+// Поэтому нужен адаптер, чтобы человек мог взаимодействовать с котом.
+
 func main() {
-	// путешественник
-	drvr := &driver{}
-	auto := &auto{}
+	// создаем человека
+	human := &human{}
+	// создаем собаку
+	dog := &dog{}
 
-	drvr.travel(auto)
+	// взаимодействуем с собакой (гладим)
+	human.interaction(dog)
 
-	camel := &camel{}
-	camelTransport := &camelToTransportAdapter{c: camel}
+	// создаем кота и адаптер к нему
+	cat := &cat{}
+	catPetting := &catToPetAdapter{c: cat}
 
-	// продолжаем путь по пескам пустыни
-	drvr.travel(camelTransport)
+	// гладим кота
+	human.interaction(catPetting)
 }
 
-// интерфейс транспорта
-type transport interface {
-	drive()
+// интерфейс животного
+type animal interface {
+	pet()
 }
 
-// путешественник
-type driver struct {
+// человек
+type human struct{}
+
+func (h *human) interaction(t animal) {
+	t.pet()
 }
 
-func (d *driver) travel(t transport) {
-	t.drive()
+// собака
+type dog struct {
+	animal
 }
 
-// машина
-type auto struct {
-	transport
+func (d *dog) pet() {
+	fmt.Println("petting dog")
 }
 
-func (a *auto) drive() {
-	fmt.Println("driving auto")
+// кошка
+type cat struct {
+	animal
 }
 
-// верблюд
-type camel struct {
-	transport
-}
-
-func (c *camel) move() {
-	fmt.Println("moving camel")
+func (c *cat) petCautiously() {
+	fmt.Println("petting cat")
 }
 
 // адаптер
-type camelToTransportAdapter struct {
-	c *camel
-	transport
+type catToPetAdapter struct {
+	c *cat
+	animal
 }
 
-func (a *camelToTransportAdapter) drive() {
-	a.c.move()
+func (a *catToPetAdapter) pet() {
+	a.c.petCautiously()
 }

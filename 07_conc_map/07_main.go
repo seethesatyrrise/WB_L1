@@ -8,13 +8,13 @@ import (
 
 type sMap struct {
 	m   map[string]string
-	mtx *sync.RWMutex
+	mtx *sync.Mutex
 }
 
 func main() {
 	var key, value string
 
-	sm := &sMap{m: make(map[string]string), mtx: &sync.RWMutex{}}
+	sm := &sMap{m: make(map[string]string), mtx: &sync.Mutex{}}
 
 	for {
 		fmt.Fscanln(os.Stdin, &key, &value)
@@ -23,7 +23,7 @@ func main() {
 }
 
 func (sm *sMap) putInMap(key, value string) {
-	sm.mtx.RLock()
+	sm.mtx.Lock()
 	sm.m[key] = value
-	sm.mtx.RUnlock()
+	sm.mtx.Unlock()
 }
